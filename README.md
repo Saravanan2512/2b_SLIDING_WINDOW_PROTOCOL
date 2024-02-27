@@ -8,6 +8,58 @@
 5. If your frames reach the server it will send ACK signal to client
 6. Stop the Program
 ## PROGRAM
+```
+import time
+
+def sender(frames, window_size):
+    base = 0
+    next_seq_num = 0
+
+    while base < len(frames):
+        for i in range(base, min(base + window_size, len(frames))):
+            next_seq_num += 1
+            print(f"Sending Frame {next_seq_num}: {frames[i]}")
+
+        ack_received = False
+
+        while not ack_received:
+            ack = input("Enter ACK number received from server: ")
+
+            if ack.isdigit() and base <= int(ack) < next_seq_num:
+                base = int(ack) + 1
+                ack_received = True
+            else:
+                print("Invalid ACK. Resending frames...")
+
+def receiver(frames, window_size):
+    expected_frame = 0
+
+    while expected_frame < len(frames):
+        for i in range(expected_frame, min(expected_frame + window_size, len(frames))):
+            print(f"Received Frame {i + 1}: {frames[i]}")
+            time.sleep(1)  # Simulating processing time
+            print(f"Sending ACK for Frame {i + 1}")
+            time.sleep(1)  # Simulating transmission time
+            print(f"ACK {i + 1} sent")
+
+        expected_frame += window_size
+
+if __name__ == "__main__":
+    frame_size = int(input("Enter frame size: "))
+    frames = [f"Frame {i + 1}" for i in range(frame_size)]
+
+    window_size = int(input("Enter window size: "))
+
+    print("Sender:")
+    sender(frames, window_size)
+
+    print("\nReceiver:")
+    receiver(frames, window_size)
+
+    print("Program stopped.")
+```
 ## OUPUT
+![image](https://github.com/Saravanan2512/2b_SLIDING_WINDOW_PROTOCOL/assets/144979117/929e0098-7ad8-479f-9e72-039ad3b8c7d4)
+
 ## RESULT
 Thus, python program to perform stop and wait protocol was successfully executed
